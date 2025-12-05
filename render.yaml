@@ -1,0 +1,37 @@
+services:
+  # Backend API
+  - type: web
+    name: biblioteca-api
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://biblioteca-saquarema.onrender.com
+    healthCheckPath: /health
+
+  # Frontend
+  - type: web
+    name: biblioteca-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: https://biblioteca-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
