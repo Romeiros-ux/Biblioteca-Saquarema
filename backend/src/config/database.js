@@ -21,13 +21,24 @@ console.log('🔍 Debug variáveis:', {
 });
 
 if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Variáveis faltando:', { supabaseUrl, supabaseKey: supabaseKey?.substring(0, 50) + '...' });
   throw new Error('Variáveis de ambiente do Supabase não configuradas');
 }
 
+// Opções para o cliente Supabase
+const options = {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: false
+  }
+};
+
 // Cliente público (para operações normais)
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, options);
 
 // Cliente admin (para operações administrativas)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+export const supabaseAdmin = supabaseServiceKey 
+  ? createClient(supabaseUrl, supabaseServiceKey, options)
+  : supabase;
 
 export default supabase;
