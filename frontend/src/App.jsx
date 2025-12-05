@@ -5,6 +5,7 @@ import { Box, CssBaseline, Toolbar } from '@mui/material';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import PrivateRoute from './components/PrivateRoute';
+import PublicCatalog from './pages/PublicCatalog';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Catalog from './pages/Catalog';
@@ -57,9 +58,10 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
+          <Route path="/" element={<PublicCatalog />} />
           <Route path="/login" element={<Login />} />
           <Route
-            path="/*"
+            path="/admin/*"
             element={
               <PrivateRoute>
                 <Box sx={{ display: 'flex', minHeight: '100vh' }}>

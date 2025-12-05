@@ -23,13 +23,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const drawerWidth = 240;
 
 const menuItems = [
-  { text: 'Dashboard', icon: <Dashboard />, path: '/' },
-  { text: 'Catálogo', icon: <MenuBook />, path: '/catalog' },
-  { text: 'Circulação', icon: <LibraryBooks />, path: '/circulation' },
-  { text: 'Usuários', icon: <People />, path: '/users' },
-  { text: 'Importar Livros', icon: <CloudUpload />, path: '/import' },
-  { text: 'Relatórios', icon: <Assessment />, path: '/reports' },
-  { text: 'Configurações', icon: <Settings />, path: '/settings' },
+  { text: 'Dashboard', icon: <Dashboard />, path: '/admin' },
+  { text: 'Catálogo', icon: <MenuBook />, path: '/admin/catalog' },
+  { text: 'Circulação', icon: <LibraryBooks />, path: '/admin/circulation' },
+  { text: 'Usuários', icon: <People />, path: '/admin/users' },
+  { text: 'Importar Livros', icon: <CloudUpload />, path: '/admin/import' },
+  { text: 'Relatórios', icon: <Assessment />, path: '/admin/reports' },
+  { text: 'Configurações', icon: <Settings />, path: '/admin/settings' },
 ];
 
 const Sidebar = ({ mobileOpen, onClose }) => {

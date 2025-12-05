@@ -20,7 +20,7 @@ const Login = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/');
+      navigate('/admin');
     } else {
       setError(result.error);
     }
@@ -43,7 +43,7 @@ const Login = () => {
             📚 Sistema de Biblioteca
           </Typography>
           <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
-            Faça login para continuar
+            Acesso Restrito - Bibliotecários
           </Typography>
 
           {error && (
