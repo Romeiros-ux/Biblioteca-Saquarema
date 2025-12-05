@@ -2,10 +2,13 @@ services:
   # Backend API
   - type: web
     name: biblioteca-api
-    env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    runtime: node
+    region: oregon
     plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -24,10 +27,13 @@ services:
   # Frontend
   - type: web
     name: biblioteca-frontend
-    env: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
+    runtime: static
+    region: oregon
     plan: free
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
         value: https://biblioteca-api.onrender.com/api
