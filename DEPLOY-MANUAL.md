@@ -1,18 +1,18 @@
-# 🚀 Deploy Manual no Render - Guia Rápido
+# 🚀 Deploy Único no Render - Backend + Frontend
 
-Se você encontrou o erro "no such file or directory" com o Blueprint, siga este guia para deploy manual.
+Sistema configurado para rodar em **um único serviço** no Render.
 
-## ❌ Erro Comum
+## ✨ Vantagens
 
-```
-error: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory
-```
+- ✅ Apenas 1 serviço no Render (mais simples)
+- ✅ Sem problemas de CORS (mesmo domínio)
+- ✅ URLs relativas (frontend chama `/api`)
+- ✅ Mais rápido (menos latência)
+- ✅ Mais barato (1 instância gratuita)
 
-**Causa:** O Blueprint pode tentar usar Docker quando deveria usar Node.js diretamente.
+## 🚀 Deploy Manual
 
-## ✅ Solução: Deploy Manual
-
-### 1️⃣ Deploy do Backend
+### 1️⃣ Criar Web Service Único
 
 1. **Acesse:** https://dashboard.render.com
 2. **Clique:** New + → Web Service
@@ -20,13 +20,13 @@ error: failed to solve: failed to read dockerfile: open Dockerfile: no such file
 4. **Configure:**
 
    ```
-   Name:              biblioteca-api
+   Name:              biblioteca-saquarema
    Region:            Oregon (US West)
    Branch:            main
-   Root Directory:    backend
+   Root Directory:    (deixe vazio - raiz do projeto)
    Runtime:           Node
-   Build Command:     npm install
-   Start Command:     npm start
+   Build Command:     npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+   Start Command:     npm start --prefix backend
    Instance Type:     Free
    ```
 
@@ -38,51 +38,19 @@ error: failed to solve: failed to read dockerfile: open Dockerfile: no such file
    SUPABASE_URL=https://jilwzfxlroenxsdyjhsd.supabase.co
    SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbHd6Znhscm9lbnhzZHlqaHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NTQ4NjcsImV4cCI6MjA4MDQzMDg2N30.YsI1DNpEuork1AmTs9ZAQj-H03Rv430WGxO4Ako4V0E
    JWT_SECRET=biblioteca-saquarema-secret-key-2025-super-segura
-   CORS_ORIGIN=https://biblioteca-saquarema.onrender.com
+   VITE_API_URL=/api
    ```
+
+   ⚠️ **Importante:** `VITE_API_URL=/api` é URL relativa (não precisa especificar domínio)
 
 6. **Clique:** Create Web Service
-7. **Aguarde:** 3-5 minutos para build completar
-
-### 2️⃣ Deploy do Frontend
-
-1. **No Dashboard:** New + → Static Site
-2. **Conecte:** Mesmo repositório
-3. **Configure:**
-
-   ```
-   Name:              biblioteca-frontend
-   Branch:            main
-   Root Directory:    frontend
-   Build Command:     npm install && npm run build
-   Publish Directory: dist
-   ```
-
-4. **Adicione Variável de Ambiente:**
-
-   Após o backend estar pronto, anote a URL (ex: `https://biblioteca-api.onrender.com`)
-
-   ```env
-   VITE_API_URL=https://biblioteca-api.onrender.com/api
-   ```
-
-5. **Clique:** Create Static Site
-6. **Aguarde:** 2-4 minutos para build completar
-
-### 3️⃣ Atualizar CORS no Backend
-
-Depois que o frontend estiver pronto:
-
-1. Anote a URL do frontend (ex: `https://biblioteca-saquarema.onrender.com`)
-2. Vá no backend → Environment
-3. Atualize `CORS_ORIGIN` com a URL real do frontend
-4. Salve (o serviço reiniciará automaticamente)
+7. **Aguarde:** 5-7 minutos para build completar (faz build do frontend + backend)
 
 ## ✅ Verificar Deploy
 
-### Backend
+### Health Check
 ```bash
-curl https://biblioteca-api.onrender.com/health
+curl https://biblioteca-saquarema.onrender.com/health
 ```
 
 Deve retornar:
@@ -91,38 +59,45 @@ Deve retornar:
 ```
 
 ### Frontend
-Acesse: `https://biblioteca-frontend.onrender.com`
+Acesse: `https://biblioteca-saquarema.onrender.com`
 
 Deve carregar a tela de login.
 
+### API
+Acesse: `https://biblioteca-saquarema.onrender.com/api`
+
+Deve retornar JSON com mensagem de erro (esperado, é a rota raiz da API).
+
 ## 🔧 Troubleshooting
 
-### Backend não inicia
-1. Verifique logs: Dashboard → biblioteca-api → Logs
-2. Confirme variáveis de ambiente
+### Build falha
+1. Verifique logs no Dashboard
+2. Confirme que `VITE_API_URL=/api` está configurado
+3. Tente Clear Build Cache e rebuild
+
+### Servidor não inicia
+1. Verifique logs: Dashboard → biblioteca-saquarema → Logs
+2. Confirme variáveis de ambiente do Supabase
 3. Teste conexão com Supabase
 
-### Frontend não conecta ao backend
-1. Verifique `VITE_API_URL` no frontend
-2. Verifique `CORS_ORIGIN` no backend
-3. Teste endpoint: `/health`
+### Frontend não carrega
+1. Verifique se o build completou: logs devem mostrar "npm run build --prefix frontend"
+2. Verifique se pasta `frontend/dist` foi criada
+3. Tente rebuild forçado
 
-### Erro 404 ao navegar
-1. Verifique se há rewrite rule configurada
-2. No Dashboard do frontend: Settings → Redirects/Rewrites
-3. Adicione:
-   - Source: `/*`
-   - Destination: `/index.html`
-   - Action: `Rewrite`
+### API retorna 404
+1. Confirme que está acessando `/api/...` e não apenas `/`
+2. Verifique logs do servidor
+3. Teste `/health` primeiro
 
 ## 📊 Status Final
 
-Após completar, você terá:
+Após completar, você terá **1 único serviço**:
 
-- ✅ Backend: `https://biblioteca-api.onrender.com`
-- ✅ Frontend: `https://biblioteca-frontend.onrender.com`
-- ✅ Health Check: Funcionando
-- ✅ Login: Operacional
+- ✅ Sistema: `https://biblioteca-saquarema.onrender.com`
+- ✅ Frontend: `https://biblioteca-saquarema.onrender.com`
+- ✅ API: `https://biblioteca-saquarema.onrender.com/api`
+- ✅ Health: `https://biblioteca-saquarema.onrender.com/health`
 
 ## 🔄 Próximos Deploy
 

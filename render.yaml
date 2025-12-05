@@ -1,14 +1,13 @@
 services:
-  # Backend API
+  # Sistema Completo - Backend + Frontend
   - type: web
-    name: biblioteca-api
+    name: biblioteca-saquarema
     runtime: node
     region: oregon
     plan: free
     branch: main
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+    startCommand: npm start --prefix backend
     envVars:
       - key: NODE_ENV
         value: production
@@ -22,22 +21,6 @@ services:
         sync: false
       - key: CORS_ORIGIN
         value: https://biblioteca-saquarema.onrender.com
-    healthCheckPath: /health
-
-  # Frontend
-  - type: web
-    name: biblioteca-frontend
-    runtime: static
-    region: oregon
-    plan: free
-    branch: main
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    envVars:
       - key: VITE_API_URL
-        value: https://biblioteca-api.onrender.com/api
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+        value: /api
+    healthCheckPath: /health
