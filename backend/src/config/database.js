@@ -10,17 +10,20 @@ const supabaseUrl = process.env.SUPABASE_URL?.trim();
 const supabaseKey = (process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY)?.trim();
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY?.trim();
 
-console.log('🔍 Debug variáveis:', {
+console.log('🔍 Debug variáveis Supabase:', {
   NODE_ENV: process.env.NODE_ENV,
   hasUrl: !!supabaseUrl,
   hasKey: !!supabaseKey,
   hasServiceKey: !!supabaseServiceKey,
-  urlStart: supabaseUrl?.substring(0, 20),
-  keyStart: supabaseKey?.substring(0, 20),
-  serviceKeyStart: supabaseServiceKey?.substring(0, 20),
+  urlStart: supabaseUrl?.substring(0, 30),
+  keyStart: supabaseKey?.substring(0, 30),
+  keyEnd: supabaseKey?.substring(supabaseKey.length - 30),
+  serviceKeyStart: supabaseServiceKey?.substring(0, 30),
+  serviceKeyEnd: supabaseServiceKey?.substring(supabaseServiceKey?.length - 30),
   keyLength: supabaseKey?.length,
   serviceKeyLength: supabaseServiceKey?.length,
-  keyType: typeof supabaseKey
+  keyType: typeof supabaseKey,
+  serviceKeyType: typeof supabaseServiceKey
 });
 
 if (!supabaseUrl || !supabaseKey) {

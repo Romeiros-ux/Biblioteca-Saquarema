@@ -11,11 +11,44 @@ export const importController = {
       }
 
       // Verificar se SERVICE_KEY está configurada
-      if (!process.env.SUPABASE_SERVICE_KEY) {
+      const serviceKey = process.env.SUPABASE_SERVICE_KEY?.trim();
+      if (!serviceKey) {
         logger.error('❌ SUPABASE_SERVICE_KEY não configurada - importação falhará por RLS');
         return res.status(500).json({ 
           error: 'Configuração incorreta',
           message: 'SUPABASE_SERVICE_KEY não está configurada no servidor. Configure a variável de ambiente e tente novamente.'
+        });
+      }
+
+      // Log para debug da chave
+      logger.info('🔑 SERVICE_KEY info:', {
+        length: serviceKey.length,
+        start: serviceKey.substring(0, 30),
+        end: serviceKey.substring(serviceKey.length - 30)
+      });
+
+      // Testar conexão com supabaseAdmin antes de importar
+      try {
+        const { data: testData, error: testError } = await supabaseAdmin
+          .from('bibliographic_records')
+          .select('id')
+          .limit(1);
+        
+        if (testError) {
+          logger.error('❌ Erro ao testar supabaseAdmin:', testError);
+          return res.status(500).json({
+            error: 'Erro de autenticação Supabase',
+            message: `SERVICE_KEY inválida ou sem permissões: ${testError.message}`,
+            details: testError
+          });
+        }
+        
+        logger.info('✅ supabaseAdmin validado com sucesso');
+      } catch (testErr) {
+        logger.error('❌ Exceção ao testar supabaseAdmin:', testErr);
+        return res.status(500).json({
+          error: 'Erro ao validar conexão',
+          message: testErr.message
         });
       }
 
