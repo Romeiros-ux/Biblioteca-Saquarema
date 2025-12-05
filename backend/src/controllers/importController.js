@@ -10,6 +10,15 @@ export const importController = {
         return res.status(400).json({ error: 'Nenhum arquivo enviado' });
       }
 
+      // Verificar se SERVICE_KEY está configurada
+      if (!process.env.SUPABASE_SERVICE_KEY) {
+        logger.error('❌ SUPABASE_SERVICE_KEY não configurada - importação falhará por RLS');
+        return res.status(500).json({ 
+          error: 'Configuração incorreta',
+          message: 'SUPABASE_SERVICE_KEY não está configurada no servidor. Configure a variável de ambiente e tente novamente.'
+        });
+      }
+
       // Ler arquivo Excel do buffer
       const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
       const sheetName = workbook.SheetNames[0];

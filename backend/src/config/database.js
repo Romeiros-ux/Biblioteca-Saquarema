@@ -14,9 +14,12 @@ console.log('🔍 Debug variáveis:', {
   NODE_ENV: process.env.NODE_ENV,
   hasUrl: !!supabaseUrl,
   hasKey: !!supabaseKey,
+  hasServiceKey: !!supabaseServiceKey,
   urlStart: supabaseUrl?.substring(0, 20),
   keyStart: supabaseKey?.substring(0, 20),
+  serviceKeyStart: supabaseServiceKey?.substring(0, 20),
   keyLength: supabaseKey?.length,
+  serviceKeyLength: supabaseServiceKey?.length,
   keyType: typeof supabaseKey
 });
 
@@ -36,7 +39,10 @@ const options = {
 // Cliente público (para operações normais)
 export const supabase = createClient(supabaseUrl, supabaseKey, options);
 
-// Cliente admin (para operações administrativas)
+// Cliente admin (para operações administrativas - bypass RLS)
+if (!supabaseServiceKey) {
+  console.warn('⚠️ SUPABASE_SERVICE_KEY não configurada! Operações administrativas (importação) NÃO funcionarão.');
+}
 export const supabaseAdmin = supabaseServiceKey 
   ? createClient(supabaseUrl, supabaseServiceKey, options)
   : supabase;
