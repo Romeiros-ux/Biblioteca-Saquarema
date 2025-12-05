@@ -1,5 +1,5 @@
 import xlsx from 'xlsx';
-import { supabase } from '../config/database.js';
+import { supabaseAdmin } from '../config/database.js';
 import logger from '../config/logger.js';
 
 export const importController = {
@@ -42,8 +42,8 @@ export const importController = {
             created_by: req.user.id,
           };
 
-          // Inserir registro bibliográfico
-          const { data: record, error: recordError } = await supabase
+          // Inserir registro bibliográfico (usando supabaseAdmin para bypass RLS)
+          const { data: record, error: recordError } = await supabaseAdmin
             .from('bibliographic_records')
             .insert(bookData)
             .select()
@@ -55,7 +55,7 @@ export const importController = {
             continue;
           }
 
-          // Criar exemplar
+          // Criar exemplar (usando supabaseAdmin para bypass RLS)
           const holdingData = {
             bibliographic_record_id: record.id,
             barcode: row['Código de Barras'] || row['CÓDIGO'] || null,
@@ -64,8 +64,8 @@ export const importController = {
             location: row['Localização'] || row['LOCALIZAÇÃO'] || 'Acervo Principal',
           };
 
-          await supabase.from('holdings').insert(holdingData);
-          imported++;
+          await supabaseAdmin.from('holdings').insert(holdingData);
+          imported;
 
         } catch (error) {
           errors++;
@@ -91,14 +91,14 @@ export const importController = {
   // Limpar todos os livros
   async clearAllBooks(req, res, next) {
     try {
-      // Remover exemplares
-      await supabase
+      // Remover exemplares (usando supabaseAdmin para bypass RLS)
+      await supabaseAdmin
         .from('holdings')
         .delete()
         .neq('id', '00000000-0000-0000-0000-000000000000');
 
-      // Remover registros bibliográficos
-      const { error } = await supabase
+      // Remover registros bibliográficos (usando supabaseAdmin para bypass RLS)
+      const { error } = await supabaseAdmin
         .from('bibliographic_records')
         .delete()
         .neq('id', '00000000-0000-0000-0000-000000000000');

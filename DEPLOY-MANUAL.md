@@ -37,9 +37,15 @@ Sistema configurado para rodar em **um único serviço** no Render.
    PORT=10000
    SUPABASE_URL=https://jilwzfxlroenxsdyjhsd.supabase.co
    SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbHd6Znhscm9lbnhzZHlqaHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4NTQ4NjcsImV4cCI6MjA4MDQzMDg2N30.YsI1DNpEuork1AmTs9ZAQj-H03Rv430WGxO4Ako4V0E
+   SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbHd6Znhscm9lbnhzZHlqaHNkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDg1NDg2NywiZXhwIjoyMDgwNDMwODY3fQ.aCU4f8FT_2HG7sLWUZ_0_iq_-O_zd04UwAzqCLpGWRc
    JWT_SECRET=biblioteca-saquarema-secret-key-2025-super-segura
    VITE_API_URL=/api
    ```
+   
+   ⚠️ **Importante sobre as chaves:**
+   - `SUPABASE_ANON_KEY`: Chave pública (segura para expor no frontend)
+   - `SUPABASE_SERVICE_KEY`: Chave administrativa (NUNCA expor! Apenas backend)
+   - A SERVICE_KEY é necessária para operações de importação (bypass RLS)
 
    ⚠️ **Importante:** `VITE_API_URL=/api` é URL relativa (não precisa especificar domínio)
 
