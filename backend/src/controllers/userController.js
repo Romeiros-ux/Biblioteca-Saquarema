@@ -154,4 +154,20 @@ export const userController = {
       next(error);
     }
   },
+
+  // Listar tipos de usuário
+  async getUserTypes(req, res, next) {
+    try {
+      const { data, error } = await supabase
+        .from('user_types')
+        .select('*')
+        .order('name');
+
+      if (error) throw error;
+
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

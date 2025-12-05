@@ -4,6 +4,7 @@ import { authMiddleware, checkPermission } from '../middleware/auth.js';
 
 const router = express.Router();
 
+router.get('/types', authMiddleware, userController.getUserTypes);
 router.get('/', authMiddleware, userController.listUsers);
 router.get('/:id', authMiddleware, userController.getUser);
 router.post('/', authMiddleware, checkPermission('user_create'), userController.createUser);
