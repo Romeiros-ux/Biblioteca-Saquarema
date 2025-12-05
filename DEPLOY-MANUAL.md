@@ -25,8 +25,8 @@ Sistema configurado para rodar em **um único serviço** no Render.
    Branch:            main
    Root Directory:    (deixe vazio - raiz do projeto)
    Runtime:           Node
-   Build Command:     npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
-   Start Command:     npm start --prefix backend
+   Build Command:     cd backend && npm install && cd ../frontend && npm ci && npm run build
+   Start Command:     cd backend && npm start
    Instance Type:     Free
    ```
 
