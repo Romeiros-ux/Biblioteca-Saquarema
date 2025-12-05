@@ -3,6 +3,64 @@ import { supabaseAdmin } from '../config/database.js';
 import logger from '../config/logger.js';
 
 export const importController = {
+  // Verificar configuração
+  async checkConfig(req, res, next) {
+    try {
+      const serviceKey = process.env.SUPABASE_SERVICE_KEY?.trim();
+      const hasServiceKey = !!serviceKey;
+
+      if (!hasServiceKey) {
+        return res.json({
+          configured: false,
+          message: 'SUPABASE_SERVICE_KEY NÃO está configurada',
+          supabaseAdminAvailable: false
+        });
+      }
+
+      // Testar conexão
+      try {
+        const { data, error } = await supabaseAdmin
+          .from('bibliographic_records')
+          .select('id')
+          .limit(1);
+
+        if (error) {
+          return res.json({
+            configured: true,
+            message: 'SERVICE_KEY configurada mas com erro',
+            error: error.message,
+            keyInfo: {
+              length: serviceKey.length,
+              start: serviceKey.substring(0, 30),
+              end: serviceKey.substring(serviceKey.length - 30)
+            },
+            supabaseAdminAvailable: false
+          });
+        }
+
+        return res.json({
+          configured: true,
+          message: 'Configuração OK - Pronto para importar',
+          keyInfo: {
+            length: serviceKey.length,
+            start: serviceKey.substring(0, 30),
+            end: serviceKey.substring(serviceKey.length - 30)
+          },
+          supabaseAdminAvailable: true
+        });
+      } catch (testErr) {
+        return res.json({
+          configured: true,
+          message: 'Erro ao testar conexão',
+          error: testErr.message,
+          supabaseAdminAvailable: false
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+
   // Importar livros de arquivo Excel
   async importFromExcel(req, res, next) {
     try {

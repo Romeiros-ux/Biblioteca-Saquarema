@@ -89,7 +89,10 @@ export default function ImportBooks() {
       setFile(null);
       setPreview(null);
     } catch (err) {
-      setError(err.response?.data?.error || 'Erro ao importar arquivo');
+      console.error('Erro completo:', err);
+      console.error('Resposta:', err.response?.data);
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || err.message || 'Erro ao importar arquivo';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

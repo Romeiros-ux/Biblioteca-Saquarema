@@ -26,6 +26,13 @@ const upload = multer({
   },
 });
 
+// Verificar configuração da SERVICE_KEY
+router.get('/check-config',
+  authMiddleware,
+  checkRole(['admin', 'librarian']),
+  importController.checkConfig
+);
+
 // Preview do arquivo Excel (não salva no banco)
 router.post('/preview',
   authMiddleware,
