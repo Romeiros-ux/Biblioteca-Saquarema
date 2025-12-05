@@ -33,7 +33,7 @@ export const authController = {
           permissions: user.roles.permissions,
         },
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
       logger.info(`Login bem-sucedido: ${email}`);
