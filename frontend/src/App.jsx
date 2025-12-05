@@ -62,7 +62,7 @@ function App() {
             path="/*"
             element={
               <PrivateRoute>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex', minHeight: '100vh' }}>
                   <Navbar onMenuClick={handleDrawerToggle} />
                   <Sidebar mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
                   <Box
@@ -70,9 +70,12 @@ function App() {
                     sx={{
                       flexGrow: 1,
                       p: { xs: 2, sm: 3 },
-                      width: { sm: `calc(100% - 240px)` },
+                      width: '100%',
+                      maxWidth: { sm: `calc(100% - 240px)` },
+                      marginLeft: { xs: 0, sm: '240px' },
                       minHeight: '100vh',
                       bgcolor: '#f5f5f5',
+                      transition: 'margin 0.3s ease',
                     }}
                   >
                     <Toolbar />

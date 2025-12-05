@@ -23,7 +23,14 @@ const Navbar = ({ onMenuClick }) => {
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        width: { xs: '100%', sm: `calc(100% - 240px)` },
+        ml: { xs: 0, sm: '240px' },
+      }}
+    >
       <Toolbar>
         <IconButton
           color="inherit"
@@ -39,7 +46,7 @@ const Navbar = ({ onMenuClick }) => {
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body2" sx={{ mr: 2 }}>
+          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', md: 'block' } }}>
             {user?.name}
           </Typography>
           <IconButton
